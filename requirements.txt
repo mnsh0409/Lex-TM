@@ -1,0 +1,52 @@
+# requirements.txt
+# Compiled from actual import statements across the codebase (verified by
+# grep, not assumed). Version floors reflect documented minimums; pin exact
+# versions with `pip freeze` once your environment is working, for full
+# reproducibility.
+
+# --- Core numerical / data ---------------------------------------------
+# numpy is capped below 2.0 on purpose: numba (used by the Gibbs sampler)
+# does not support numpy>=2, and a newer numpy triggers a cascade of
+# "_ARRAY_API not found" / "Numba needs NumPy 1.26 or less" import errors
+# that surface confusingly through transformers/sentence-transformers.
+# If you must upgrade numpy, you also have to drop numba (and the compiled
+# sampler with it). Keep this ceiling unless you know exactly why not.
+numpy<2
+pandas
+scipy
+
+# --- Progress bars --------------------------------------------------------
+tqdm
+
+# --- Topic model (Gibbs sampling) -----------------------------------------
+numba                       # JIT-accelerates lex_tm_model.py's sampler
+
+# --- Dense retrieval --------------------------------------------------------
+torch
+sentence-transformers>=2.7.0   # required for Qwen3-Embedding support
+transformers>=4.51.0           # required for Qwen3-Embedding support (KeyError: 'qwen3' below this)
+
+# --- Lexical retrieval ------------------------------------------------------
+rank_bm25
+
+# --- Benchmarks and baselines (camera_ready_extras.py) --------------------
+datasets                     # export of ChatDoctorRetrieval / CmedqaRetrieval
+# FlagEmbedding               # optional: BGE-M3 sparse/multi-vector heads (rebuilt from
+                              # transformers + the checkpoint's heads when absent)
+# beir                        # optional: only the earlier TREC-COVID/NFCorpus scripts
+
+# --- Tokenization (per-language, used by rag_dataload.py) -------------------
+nltk                         # English: word_tokenize, stopwords, WordNetLemmatizer
+jieba                        # Chinese segmentation
+fugashi                      # Japanese morpheme segmentation (MeCab wrapper)
+ipadic                       # Japanese: IPADIC dictionary for fugashi
+pythainlp                    # Thai segmentation (optional — rag_dataload.py
+                              # falls back to a built-in stopword list and
+                              # naive tokenization if this is not installed;
+                              # see rag_dataload.py for the fallback path)
+
+# --- NLTK data ---------------------------------------------------------
+# rag_dataload.py auto-downloads required NLTK corpora on first import
+# (stopwords, punkt, punkt_tab, wordnet) via nltk.download(). This requires
+# network access on first run; see docs/FIXES.md if this errors out in an
+# offline environment — the correct resource paths are documented there.

@@ -1,0 +1,31 @@
+# Experiment outputs / caches (regenerated on first run, large binary files)
+experiment_logs/
+experiment_logs1/
+*.npy
+
+# Data (never bundled — see README "Data" section)
+data/
+*.csv
+*.jsonl
+*.tsv
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# OS / editor
+.DS_Store
+.vscode/
+*.swp
+
+# Reruns and earlier-pipeline outputs
+results/camera_ready_rerun/
+camera_ready_results/
+result/
+cache_*/
+
+# Data exports are never bundled, but the released results are
+!results/camera_ready/**
